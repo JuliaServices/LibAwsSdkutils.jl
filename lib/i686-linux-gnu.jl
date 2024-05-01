@@ -341,11 +341,6 @@ Documentation not found.
 mutable struct aws_endpoints_request_context end
 
 """
-Documentation not found.
-"""
-mutable struct aws_hash_table end
-
-"""
     aws_endpoints_parameter_type
 
 Documentation not found.
