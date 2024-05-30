@@ -10,7 +10,7 @@ aws_c_sdkutils_jll = "1282aa60-004d-510b-9f52-12498d409daa"
 [compat]
 Aqua = "0.7"
 CEnum = "0.5"
-LibAwsCommon = "=1.0.0"
+LibAwsCommon = "=1.0.0, 1"
 aws_c_sdkutils_jll = "=0.1.12"
 julia = "1.6"
 
