@@ -34,7 +34,8 @@ Documentation not found.
 @cenum aws_profile_section_type::UInt32 begin
     AWS_PROFILE_SECTION_TYPE_PROFILE = 0
     AWS_PROFILE_SECTION_TYPE_SSO_SESSION = 1
-    AWS_PROFILE_SECTION_TYPE_COUNT = 2
+    AWS_PROFILE_SECTION_TYPE_SERVICES = 2
+    AWS_PROFILE_SECTION_TYPE_COUNT = 3
 end
 
 """
@@ -348,6 +349,7 @@ Documentation not found.
 @cenum aws_endpoints_parameter_type::UInt32 begin
     AWS_ENDPOINTS_PARAMETER_STRING = 0
     AWS_ENDPOINTS_PARAMETER_BOOLEAN = 1
+    AWS_ENDPOINTS_PARAMETER_STRING_ARRAY = 2
 end
 
 """
@@ -671,6 +673,19 @@ int aws_endpoints_request_context_add_boolean( struct aws_allocator *allocator, 
 """
 function aws_endpoints_request_context_add_boolean(allocator, context, name, value)
     ccall((:aws_endpoints_request_context_add_boolean, libaws_c_sdkutils), Cint, (Ptr{aws_allocator}, Ptr{aws_endpoints_request_context}, aws_byte_cursor, Bool), allocator, context, name, value)
+end
+
+"""
+    aws_endpoints_request_context_add_string_array(allocator, context, name, value_array, len)
+
+Documentation not found.
+### Prototype
+```c
+int aws_endpoints_request_context_add_string_array( struct aws_allocator *allocator, struct aws_endpoints_request_context *context, struct aws_byte_cursor name, const struct aws_byte_cursor *value_array, size_t len);
+```
+"""
+function aws_endpoints_request_context_add_string_array(allocator, context, name, value_array, len)
+    ccall((:aws_endpoints_request_context_add_string_array, libaws_c_sdkutils), Cint, (Ptr{aws_allocator}, Ptr{aws_endpoints_request_context}, aws_byte_cursor, Ptr{aws_byte_cursor}, Csize_t), allocator, context, name, value_array, len)
 end
 
 """
