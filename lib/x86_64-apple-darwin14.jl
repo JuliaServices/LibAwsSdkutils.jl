@@ -1,4 +1,4 @@
-using CEnum
+using CEnum: CEnum, @cenum
 
 """
 Documentation not found.
@@ -314,12 +314,103 @@ end
 """
 Documentation not found.
 """
-mutable struct aws_endpoints_ruleset end
+mutable struct aws_endpoints_bdd_engine end
 
 """
 Documentation not found.
 """
 mutable struct aws_partitions_config end
+
+"""
+Documentation not found.
+"""
+mutable struct aws_endpoints_request_context end
+
+"""
+Documentation not found.
+"""
+mutable struct aws_endpoints_resolved_endpoint end
+
+"""
+    aws_endpoints_bdd_engine_new_from_bytecode(allocator, bytecode, partitions_config)
+
+Create a BDD engine from bytecode.
+
+# Arguments
+* `allocator`: Memory allocator
+* `bytecode`: Bytecode buffer The Bytecode buffer is supposed to be from heap allocated memory and guaranteed to exist for the lifetime of the engine.
+* `partitions_config`: Partition configuration (acquired by engine)
+# Returns
+New BDD engine or NULL on error
+### Prototype
+```c
+struct aws_endpoints_bdd_engine *aws_endpoints_bdd_engine_new_from_bytecode( struct aws_allocator *allocator, struct aws_byte_cursor bytecode, struct aws_partitions_config *partitions_config);
+```
+"""
+function aws_endpoints_bdd_engine_new_from_bytecode(allocator, bytecode, partitions_config)
+    ccall((:aws_endpoints_bdd_engine_new_from_bytecode, libaws_c_sdkutils), Ptr{aws_endpoints_bdd_engine}, (Ptr{aws_allocator}, aws_byte_cursor, Ptr{aws_partitions_config}), allocator, bytecode, partitions_config)
+end
+
+"""
+    aws_endpoints_bdd_engine_acquire(engine)
+
+Acquire a reference to the BDD engine.
+
+# Arguments
+* `engine`: BDD engine
+# Returns
+The same engine pointer
+### Prototype
+```c
+struct aws_endpoints_bdd_engine *aws_endpoints_bdd_engine_acquire( struct aws_endpoints_bdd_engine *engine);
+```
+"""
+function aws_endpoints_bdd_engine_acquire(engine)
+    ccall((:aws_endpoints_bdd_engine_acquire, libaws_c_sdkutils), Ptr{aws_endpoints_bdd_engine}, (Ptr{aws_endpoints_bdd_engine},), engine)
+end
+
+"""
+    aws_endpoints_bdd_engine_release(engine)
+
+Release a reference to the BDD engine. Destroys the engine when ref count reaches zero.
+
+# Arguments
+* `engine`: BDD engine
+# Returns
+NULL
+### Prototype
+```c
+struct aws_endpoints_bdd_engine *aws_endpoints_bdd_engine_release( struct aws_endpoints_bdd_engine *engine);
+```
+"""
+function aws_endpoints_bdd_engine_release(engine)
+    ccall((:aws_endpoints_bdd_engine_release, libaws_c_sdkutils), Ptr{aws_endpoints_bdd_engine}, (Ptr{aws_endpoints_bdd_engine},), engine)
+end
+
+"""
+    aws_endpoints_bdd_engine_resolve(engine, context, out_resolved_endpoint)
+
+Resolve an endpoint using the BDD engine.
+
+# Arguments
+* `engine`: BDD engine
+* `context`: Request context with parameter values
+* `out_resolved_endpoint`: Output resolved endpoint or error
+# Returns
+AWS\\_OP\\_SUCCESS on success, AWS\\_OP\\_ERR on failure
+### Prototype
+```c
+int aws_endpoints_bdd_engine_resolve( struct aws_endpoints_bdd_engine *engine, const struct aws_endpoints_request_context *context, struct aws_endpoints_resolved_endpoint **out_resolved_endpoint);
+```
+"""
+function aws_endpoints_bdd_engine_resolve(engine, context, out_resolved_endpoint)
+    ccall((:aws_endpoints_bdd_engine_resolve, libaws_c_sdkutils), Cint, (Ptr{aws_endpoints_bdd_engine}, Ptr{aws_endpoints_request_context}, Ptr{Ptr{aws_endpoints_resolved_endpoint}}), engine, context, out_resolved_endpoint)
+end
+
+"""
+Documentation not found.
+"""
+mutable struct aws_endpoints_ruleset end
 
 """
 Documentation not found.
@@ -330,16 +421,6 @@ mutable struct aws_endpoints_parameter end
 Documentation not found.
 """
 mutable struct aws_endpoints_rule_engine end
-
-"""
-Documentation not found.
-"""
-mutable struct aws_endpoints_resolved_endpoint end
-
-"""
-Documentation not found.
-"""
-mutable struct aws_endpoints_request_context end
 
 """
     aws_endpoints_parameter_type
@@ -378,7 +459,8 @@ end
 """
     aws_endpoints_parameter_get_type(parameter)
 
-Documentation not found.
+Warning: The following helpers are intended for use by SDKs that validate correctness of the ruleset at compile time. The engine sanity checks the provided ruleset, but does not do extensive checking. Some malformed rulesets might fail in unexpected ways.
+
 ### Prototype
 ```c
 enum aws_endpoints_parameter_type aws_endpoints_parameter_get_type( const struct aws_endpoints_parameter *parameter);
